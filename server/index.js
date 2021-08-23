@@ -1,8 +1,12 @@
 const express = require('express');
 const app = express();
 require('dotenv').config();
+const cors = require('cors');
 const mongoose = require('mongoose');
 const UserModel = require('./models/Users');
+
+app.use(cors());
+app.use(express.json());
 
 //Database Connection
 mongoose.connect(
@@ -11,14 +15,18 @@ mongoose.connect(
     useUnifiedTopology: true
   });
 
-app.get("/insert", async (req, res) => {
+app.post("/register", async (req, res) => {
+  const username = req.body.name;
+  const status = req.body.status;
+  const role = req.body.role;
+
   const user = new UserModel({
-    name: 'brandon',
-    status: 'active',
-    role: 'admin',
+    name: username,
+    status: status,
+    role: role,
   });
   await user.save();
-  res.send('inserted data');
+  res.send('Success');
 });
 
 app.get("/read", async (req, res) => {
