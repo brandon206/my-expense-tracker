@@ -13,8 +13,6 @@ function App() {
         status: "active",
         role: "user",
       });
-      console.log(response.data);
-      alert('is working!');
     } catch (error) {
       console.error(error);
     }
