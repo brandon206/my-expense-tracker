@@ -1,37 +1,8 @@
 body {
   padding: 0;
   margin: 0;
+  background-color: #061423;
   .App {
-    display: flex;
-    justify-content: center;
     height: 100vh;
-    .inputs {
-      height: 400px;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background-color: rgb(148, 205, 255);
-      input {
-        width: 200px;
-        height: 50px;
-        font-size: 18px;
-        margin: 10px;
-        padding-left: 10px;
-      }
-      button {
-        border: none;
-        width: 150px;
-        height: 50px;
-        background-color: rgb(53, 177, 74);
-        color: white;
-        border-radius: 8px;
-        font-size: 15px;
-      }
-      button:hover {
-        cursor: pointer;
-      }
-    }
   }
 }
