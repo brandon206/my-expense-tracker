@@ -1,40 +1,26 @@
 import "./App.scss";
-import React, { useState } from "react";
-import Axios from "axios";
+import { ChakraProvider } from "@chakra-ui/react"
+import React from "react";
+import { BrowserRouter, Route } from "react-router-dom";
+
+import NavBar from './components/Navbar';
+import Login from './pages/Login/Login';
+import SignUp from './pages/SignUp/SignUp';
+import Home from './pages/Home/Home';
+import metTheme from './styles/theme';
 
 function App() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-
-  const register = async () => {
-    try {
-      const response = await Axios.post("http://localhost:5000/register", {
-        name: username,
-        status: "active",
-        role: "user",
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   return (
-    <div className="App">
-      <div className="inputs">
-        <input
-          type="text"
-          placeholder="username"
-          onChange={(event) => setUsername(event.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="password"
-          onChange={(event) => setPassword(event.target.value)}
-        />
-
-        <button onClick={register}>Register</button>
-      </div>
-    </div>
+    <ChakraProvider theme={metTheme}>
+      <BrowserRouter>
+        <div className="App">
+          <NavBar />
+          <Route path="/" exact component={Home}></Route>
+          <Route path="/login" component={Login}></Route>
+          <Route path="/signup" component={SignUp}></Route>
+        </div>
+      </BrowserRouter>
+    </ChakraProvider>
   );
 }
 
