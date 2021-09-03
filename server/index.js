@@ -23,6 +23,7 @@ require("./routes/authRoutes")(app);
 mongoose.connect(process.env.MONGO_DB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useCreateIndex: true,
 });
 
 const PORT = process.env.PORT || 5000;
