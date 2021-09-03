@@ -5,7 +5,7 @@ import './GoogleLoginButton.scss'
 
 const GoogleLoginButton = () => {
   return (
-    <button className="google-button">
+    <button className="google-button w-full">
       <GoogleIcon />
       <div className="button-content">Log in with Google</div>
     </button>

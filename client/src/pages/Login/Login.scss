@@ -14,12 +14,12 @@
     position: relative;
     text-align: center;
     span {
-      background-color: #061423;
+      background-color: #6B7280;
       padding: 0px 10px;
       font-size: 14px;
       font-weight: normal;
       line-height: 16px;
-      color: rgb(93, 108, 116);
+      color: white;
       text-align: center;
     }
   }
@@ -36,6 +36,7 @@
     width: 100%;
   }
   .link {
-    color: #4285F4;
+    color: blue;
+    text-decoration: underline;
   }
 }
