@@ -1,16 +1,16 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import GoogleLoginButton from "../../components/GoogleLoginButton/GoogleLoginButton";
 
-const SignUp = () => {
+const ForgotPassword = () => {
   const [email, setEmail] = React.useState("");
   const handleEmailChange = (event) => setEmail(event.target.value);
-  const [password, setPassword] = React.useState("");
+  const [currentPassword, setPassword] = React.useState("");
   const handlePasswordChange = (event) => setPassword(event.target.value);
+  const [newPassword, setNewPassword] = React.useState("");
+  const handleNewPasswordChange = (event) => setNewPassword(event.target.value);
   const [show, setShow] = React.useState(false);
   const handleClick = () => setShow(!show);
-  const handleRegister = async () => {
-    const response = await fetch("http://localhost:5000/api/register", {
+  const handleForgotPassword = async () => {
+    const response = await fetch("http://localhost:5000/api/change-password", {
       method: "POST",
       headers: {
         'Accept': 'application/json',
@@ -18,11 +18,14 @@ const SignUp = () => {
       },
       body: JSON.stringify({
         email,
-        password
+        currentPassword,
+        newPassword,
+        token: localStorage.getItem('token')
       })
     });
-    const data = await response.json();
+    await response.json();
   };
+
   return (
     <>
       <div className="login container">
@@ -30,7 +33,7 @@ const SignUp = () => {
           <div className="py-12 px-12 bg-gray-500 rounded-2xl shadow-xl z-20">
             <div>
               <h1 className="text-3xl font-bold text-center mb-4 cursor-pointer">
-                Register An Account
+                Forgot Password
               </h1>
             </div>
             <div className="space-y-4">
@@ -43,8 +46,8 @@ const SignUp = () => {
               />
               <input
                 type={show ? "text" : "password"}
-                placeholder="Enter Password"
-                value={password}
+                placeholder="Current Password"
+                value={currentPassword}
                 onChange={handlePasswordChange}
                 className="block text-black text-sm py-3 px-4 rounded-lg w-full border outline-none"
               />
@@ -53,21 +56,28 @@ const SignUp = () => {
                 type="checkbox"
                 onClick={handleClick}
               />
-              {show ? " Hide" : " Show"} Password
+              {show ? " Hide" : " Show"} Current Password
+              <input
+                type={show ? "text" : "password"}
+                placeholder="New Password"
+                value={newPassword}
+                onChange={handleNewPasswordChange}
+                className="block text-black text-sm py-3 px-4 rounded-lg w-full border outline-none"
+              />
+              <input
+                className="cursor-pointer"
+                type="checkbox"
+                onClick={handleClick}
+              />
+              {show ? " Hide" : " Show"} New Password
             </div>
             <div className="text-center mt-6">
               <button
                 className="py-3 w-full text-xl text-white bg-blue-400"
-                onClick={handleRegister}
+                onClick={handleForgotPassword}
               >
-                Sign Up
+                Change Password
               </button>
-              <p className="mt-4 text-sm">
-                Already Have An Account?{" "}
-                <Link className="link" to="/login">
-                  Login
-                </Link>
-              </p>
             </div>
           </div>
         </div>
@@ -76,4 +86,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default ForgotPassword;
