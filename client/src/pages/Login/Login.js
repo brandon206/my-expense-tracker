@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { GoogleLogin } from "react-google-login";
 import GoogleIcon from "../../components/GoogleIcon";
@@ -7,16 +7,15 @@ import "./Login.scss";
 const initialState = { email: "", password: "" };
 
 const Login = () => {
-  const [email, setEmail] = React.useState("");
+  const [email, setEmail] = useState("");
   const handleEmailChange = (event) => setEmail(event.target.value);
-  const [password, setPassword] = React.useState("");
+  const [password, setPassword] = useState("");
   const handlePasswordChange = (event) => setPassword(event.target.value);
-  const [show, setShow] = React.useState(false);
+  const [show, setShow] = useState(false);
   const history = useHistory();
   const [form, setForm] = useState(initialState);
-  const [email, setEmail] = useState("");
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+  // const handleChange = (e) =>
+  //   setForm({ ...form, [e.target.name]: e.target.value });
   const handleClick = () => setShow(!show);
 
   const googleSuccess = async (res) => {
