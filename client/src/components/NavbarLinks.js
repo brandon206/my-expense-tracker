@@ -36,30 +36,40 @@ const NavItem = styled(Link)`
     font-size: 1.5rem;
     z-index: 6;
   }
-`
-const NavbarLinks = ({ navbarOpen, setNavbarOpen }) => {
-  const handleLinkClick = e => {
-    setNavbarOpen(!navbarOpen);
-  }
+`;
+const NavbarLinks = ({ onClick, logout, user }) => {
   return (
     <>
-      <NavItem onClick={handleLinkClick} to="/">
+      <NavItem onClick={onClick} to="/">
         Home
       </NavItem>
-      <NavItem onClick={handleLinkClick} to="/transactions">
+      <NavItem onClick={onClick} to="/transactions">
         Transactions
       </NavItem>
-      <NavItem onClick={handleLinkClick} to="/history">
+      <NavItem onClick={onClick} to="/history">
         History
       </NavItem>
-      <NavItem onClick={handleLinkClick} to="/profile">
+      <NavItem onClick={onClick} to="/profile">
         Profile
       </NavItem>
-      <button className="py-1 w-24 text-xl text-white bg-blue-400 rounded-md" onClick={handleLinkClick} to="/login">
-        Login
-      </button>
+      {user ? (
+        <button
+          className="py-1 w-24 text-xl text-white bg-red-400 rounded-md"
+          onClick={logout}
+        >
+          Logout
+        </button>
+      ) : (
+        <button
+          className="py-1 w-24 text-xl text-white bg-blue-400 rounded-md"
+          onClick={onClick}
+          to="/login"
+        >
+          Login
+        </button>
+      )}
     </>
-  )
-}
+  );
+};
 
-export default NavbarLinks
+export default NavbarLinks;

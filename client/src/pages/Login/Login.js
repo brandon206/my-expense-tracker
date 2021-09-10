@@ -1,16 +1,48 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import GoogleLoginButton from "../../components/GoogleLoginButton/GoogleLoginButton";
+import { useState } from "react";
+import { Link, useHistory } from "react-router-dom";
+import { GoogleLogin } from "react-google-login";
+import GoogleIcon from "../../components/GoogleIcon";
 import "./Login.scss";
 
+const initialState = { email: "", password: "" };
+
 const Login = () => {
-  const [email, setEmail] = React.useState("");
+  const [email, setEmail] = useState("");
   const handleEmailChange = (event) => setEmail(event.target.value);
-  const [password, setPassword] = React.useState("");
+  const [password, setPassword] = useState("");
   const handlePasswordChange = (event) => setPassword(event.target.value);
-  const [show, setShow] = React.useState(false);
+  const [show, setShow] = useState(false);
+  const history = useHistory();
+  const [form, setForm] = useState(initialState);
+  // const handleChange = (e) =>
+  //   setForm({ ...form, [e.target.name]: e.target.value });
   const handleClick = () => setShow(!show);
-  const handleRegister = async () => {
+
+  const googleSuccess = async (res) => {
+    console.log(res);
+    const profile = res?.profileObj;
+    const token = res?.tokenId;
+    console.log('profile: ', profile);
+    try {
+      localStorage.setItem("token", token);
+      localStorage.setItem('profile', JSON.stringify({ profile }));
+      history.push('/');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const googleFailure = async () => {
+    console.log('Google Login was unsuccessful. Try again!');
+  };
+  // const handleGoogleLogin = async () => {
+  //   const response = await fetch("http://localhost:5000/auth/google");
+  //   const data = await response.json();
+  //   console.log("google login!: ", data);
+  //   if (data.status === "success") {
+  //     localStorage.setItem("token", data.token);
+  //   }
+  // };
+  const handleLogin = async () => {
     const response = await fetch("http://localhost:5000/api/login", {
       method: "POST",
       headers: {
@@ -37,7 +69,20 @@ const Login = () => {
                 Log Into Your Account
               </h1>
             </div>
-            <GoogleLoginButton />
+            <GoogleLogin
+              clientId={process.env.GOOGLE_CLIENT_ID}
+              render={(renderProps) => (
+                <button
+                  className="google-button w-full justify-center"
+                  onClick={renderProps.onClick}
+                  disabled={renderProps.disabled}
+                  variant="contained"
+                ><GoogleIcon />Log in with Google</button>
+              )}
+              onSuccess={googleSuccess}
+              onFailure={googleFailure}
+              cookiePolicy="single_host_origin"
+            />
             <div className="container separator mt-8">
               <span>OR</span>
             </div>
@@ -66,7 +111,7 @@ const Login = () => {
             <div className="text-center mt-6">
               <button
                 className="py-3 w-full text-xl text-white bg-blue-400"
-                onClick={handleRegister}
+                onClick={handleLogin}
               >
                 Login
               </button>

@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom"
-import React, { useState } from "react"
+import { Link, useHistory } from "react-router-dom"
+import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import NavbarLinks from "./NavbarLinks"
 
@@ -83,7 +83,23 @@ const Hamburger = styled.div`
   }
 `
 const NavbarNew = () => {
-  const [navbarOpen, setNavbarOpen] = useState(false)
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')));
+  console.log('user', user);
+  const [navbarOpen, setNavbarOpen] = useState(false);
+  const history = useHistory();
+
+  const logout = () => {
+    localStorage.clear();
+    history.push('/');
+    setUser(null);
+  };
+
+  useEffect(() => {
+    const token = user?.token;
+    // Check for JWT
+
+    setUser(JSON.parse(localStorage.getItem('profile')));
+  }, []);
 
   return (
     <Navigation className="container w-4/5 px-4">
@@ -100,12 +116,14 @@ const NavbarNew = () => {
         <Navbox>
           <NavbarLinks
             navbarOpen={navbarOpen}
-            setNavbarOpen={setNavbarOpen}
+            onClick={() => setNavbarOpen(!navbarOpen)}
+            logout={logout}
+            user={user}
           />
         </Navbox>
       ) : (
         <Navbox open className="px-4">
-          <NavbarLinks />
+          <NavbarLinks logout={logout} user={user}/>
         </Navbox>
       )}
     </Navigation>
