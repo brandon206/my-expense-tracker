@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import GoogleLoginButton from "../../components/GoogleLoginButton/GoogleLoginButton";
 
 const SignUp = () => {
   const [email, setEmail] = React.useState("");
