@@ -1,25 +1,17 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const cookieSession = require("cookie-session");
-const passport = require("passport");
-require("dotenv").config();
-require("./models/User");
-require("./services/passport");
+import dotenv from 'dotenv';
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import userRoutes from "./routes/user.js";
 
+dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(cookieSession({
-  maxAge: 30 * 24 * 60 * 60 * 1000,
-  keys: [process.env.COOKIE_KEY],
-}));
-app.use(passport.initialize());
-app.use(passport.session());
 
-require("./routes/authRoutes")(app);
+app.use('/user', userRoutes);
 
-//Database Connection
+// //Database Connection
 mongoose.connect(process.env.MONGO_DB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
