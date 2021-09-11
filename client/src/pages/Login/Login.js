@@ -1,62 +1,65 @@
 import { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { GoogleLogin } from "react-google-login";
+import Input from "../../components/Input";
 import GoogleIcon from "../../components/GoogleIcon";
 import "./Login.scss";
 
 const initialState = { email: "", password: "" };
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const handleEmailChange = (event) => setEmail(event.target.value);
-  const [password, setPassword] = useState("");
-  const handlePasswordChange = (event) => setPassword(event.target.value);
-  const [show, setShow] = useState(false);
-  const history = useHistory();
   const [form, setForm] = useState(initialState);
-  // const handleChange = (e) =>
-  //   setForm({ ...form, [e.target.name]: e.target.value });
+  const [isSignup, setIsSignup] = useState(false);
+
+  const history = useHistory();
+
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
+
+  const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
 
   const googleSuccess = async (res) => {
-    console.log(res);
     const profile = res?.profileObj;
     const token = res?.tokenId;
-    console.log('profile: ', profile);
     try {
       localStorage.setItem("token", token);
-      localStorage.setItem('profile', JSON.stringify({ profile }));
-      history.push('/');
+      localStorage.setItem("profile", JSON.stringify({ profile }));
+      history.push("/");
     } catch (error) {
       console.log(error);
     }
   };
-  const googleFailure = async () => {
-    console.log('Google Login was unsuccessful. Try again!');
+  const googleFailure = async () =>
+    alert("Google Login was unsuccessful. Try again!");
+
+  const switchMode = () => {
+    setForm(initialState);
+    setIsSignup((prevIsSignup) => !prevIsSignup);
+    setShow(!show);
   };
-  // const handleGoogleLogin = async () => {
-  //   const response = await fetch("http://localhost:5000/auth/google");
-  //   const data = await response.json();
-  //   console.log("google login!: ", data);
-  //   if (data.status === "success") {
-  //     localStorage.setItem("token", data.token);
-  //   }
-  // };
-  const handleLogin = async () => {
-    const response = await fetch("http://localhost:5000/api/login", {
-      method: "POST",
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email,
-        password
-      })
-    });
-    const data = await response.json();
-    if (data.status === 'success') {
-      localStorage.setItem('token', data.token);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const baseURL = "http://localhost:5000";
+    const url = isSignup ? "/user/register" : "/user/login";
+    try {
+      const response = await fetch(baseURL + url, {
+        method: "POST",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          form
+        })
+      });
+      const data = await response.json();
+      console.log(data);
+      history.push("/");
+      localStorage.setItem("token", data.token);
+    } catch (error) {
+      console.log(error);
     }
   };
   return (
@@ -66,66 +69,79 @@ const Login = () => {
           <div className="py-12 px-12 bg-gray-500 rounded-2xl shadow-xl z-20">
             <div>
               <h1 className="text-3xl font-bold text-center mb-4 cursor-pointer">
-                Log Into Your Account
+                {isSignup ? "Sign up" : "Log Into Your Account"}
               </h1>
             </div>
-            <GoogleLogin
-              clientId={process.env.GOOGLE_CLIENT_ID}
-              render={(renderProps) => (
-                <button
-                  className="google-button w-full justify-center"
-                  onClick={renderProps.onClick}
-                  disabled={renderProps.disabled}
-                  variant="contained"
-                ><GoogleIcon />Log in with Google</button>
-              )}
-              onSuccess={googleSuccess}
-              onFailure={googleFailure}
-              cookiePolicy="single_host_origin"
-            />
-            <div className="container separator mt-8">
-              <span>OR</span>
-            </div>
-            <div className="space-y-4">
-              <input
-                type="text"
+            {!isSignup ? (
+              <>
+                <GoogleLogin
+                  clientId="161075425664-g5vgoepdksnlqsimgv5gk68sqchjb6oq.apps.googleusercontent.com"
+                  render={(renderProps) => (
+                    <button
+                      className="google-button w-full justify-center flex bg-blue-400 p-5"
+                      onClick={renderProps.onClick}
+                      disabled={renderProps.disabled}
+                      variant="contained"
+                    >
+                      <GoogleIcon />
+                      Log in with Google
+                    </button>
+                  )}
+                  onSuccess={googleSuccess}
+                  onFailure={googleFailure}
+                  cookiePolicy="single_host_origin"
+                />
+                <div className="container separator mt-8">
+                  <span>OR</span>
+                </div>
+              </>
+            ) : null}
+            <form onSubmit={handleSubmit}>
+              <Input
+                name="email"
+                type="email"
                 placeholder="Enter Email Address"
-                value={email}
-                onChange={handleEmailChange}
-                className="block text-black text-sm py-3 px-4 rounded-lg w-full border outline-none"
+                handleChange={handleChange}
+                required
+                inputStyle="block text-black text-sm py-3 px-4 rounded-lg w-full border outline-none"
               />
-              <input
+              <Input
+                name="password"
                 type={show ? "text" : "password"}
                 placeholder="Password"
-                value={password}
-                onChange={handlePasswordChange}
-                className="block text-black text-sm py-3 px-4 rounded-lg w-full border outline-none"
+                handleChange={handleChange}
+                required
+                inputStyle="block text-black text-sm py-3 px-4 rounded-lg w-full border outline-none"
               />
-              <input
+              <Input
                 className="cursor-pointer"
                 type="checkbox"
-                onClick={handleClick}
+                handleChange={handleClick}
               />
               {show ? " Hide" : " Show"} Password
-            </div>
+              {isSignup && (
+                <Input
+                  name="confirmPassword"
+                  type={show ? "text" : "password"}
+                  placeholder="Password"
+                  handleChange={handleChange}
+                  required
+                  inputStyle="block text-black text-sm py-3 px-4 rounded-lg w-full border outline-none"
+                />
+              )}
+              <div>
+                <button className="py-3 w-full text-xl text-white bg-blue-400">
+                  {isSignup ? "Sign Up" : "Login"}
+                </button>
+              </div>
+            </form>
             <div className="text-center mt-6">
-              <button
-                className="py-3 w-full text-xl text-white bg-blue-400"
-                onClick={handleLogin}
-              >
-                Login
-              </button>
               <p className="mt-4 text-sm">
-                Don't Have An Account?{" "}
-                <Link className="link" to="/signup">
-                  Sign Up
-                </Link>
-              </p>
-              <p className="mt-4 text-sm">
-                Forgot Your Password?{" "}
-                <Link className="link" to="/forgot-password">
-                  Create New Password
-                </Link>
+                <button onClick={switchMode}>
+                  {isSignup
+                    ? "Already have an account? Sign in"
+                    : "Don't have an account? Sign Up"}
+                </button>
               </p>
             </div>
           </div>
