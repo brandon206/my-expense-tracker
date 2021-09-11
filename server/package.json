@@ -2,6 +2,7 @@
   "name": "my-expense-tracker",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "author": "brandon206 <brandonpark206@gmail.com>",
   "license": "MIT",
   "scripts": {
