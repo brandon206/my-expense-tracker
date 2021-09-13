@@ -60,13 +60,12 @@ const NavbarLinks = ({ onClick, logout, user }) => {
           Logout
         </button>
       ) : (
-        <button
-          className="py-1 w-24 text-xl text-white bg-blue-400 rounded-md"
-          onClick={onClick}
+        <Link
+          className="py-1 w-24 text-center text-xl text-white bg-blue-400 rounded-md"
           to="/login"
         >
           Login
-        </button>
+        </Link>
       )}
     </>
   );
