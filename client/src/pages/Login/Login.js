@@ -55,9 +55,8 @@ const Login = () => {
         })
       });
       const data = await response.json();
-      console.log(data);
+      localStorage.setItem("profile", JSON.stringify(data));
       history.push("/");
-      localStorage.setItem("token", data.token);
     } catch (error) {
       console.log(error);
     }

@@ -1,4 +1,4 @@
-import { Link, useHistory } from "react-router-dom"
+import { Link, useHistory, useLocation } from "react-router-dom"
 import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import NavbarLinks from "./NavbarLinks"
@@ -87,6 +87,7 @@ const NavbarNew = () => {
   console.log('user', user);
   const [navbarOpen, setNavbarOpen] = useState(false);
   const history = useHistory();
+  const location = useLocation();
 
   const logout = () => {
     localStorage.clear();
@@ -99,7 +100,7 @@ const NavbarNew = () => {
     // Check for JWT
 
     setUser(JSON.parse(localStorage.getItem('profile')));
-  }, []);
+  }, [location]);
 
   return (
     <Navigation className="container w-4/5 px-4">
